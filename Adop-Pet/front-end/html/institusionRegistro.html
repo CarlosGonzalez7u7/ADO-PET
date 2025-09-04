@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADO-PET - Registro de Institución</title>
+    <link rel="stylesheet" href="../css/institusionRegistro.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background-elements">
+        <div class="tree tree-left"></div>
+        <div class="tree tree-right"></div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+    </div>
+
+    <div class="container">
+        <div class="registration-card">
+            <!-- Registration Form -->
+            <div id="registrationSection">
+                <div class="card-header">
+                    <div class="logo">ADX-PET</div>
+                    <h1 class="card-title">Registro de Institución</h1>
+                    <p class="card-subtitle">Únete a nuestra red de refugios y veterinarias</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="registrationForm">
+                        <!-- Institution Basic Info -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="institutionName">Nombre de la Institución *</label>
+                            <input type="text" id="institutionName" name="institutionName" class="form-input" required>
+                            <div id="institutionNameError" class="error-message"></div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="institutionType">Tipo de Institución *</label>
+                                <select id="institutionType" name="institutionType" class="form-input" required>
+                                    <option value="">Seleccionar tipo</option>
+                                    <option value="refugio">Refugio de Animales</option>
+                                    <option value="veterinaria">Clínica Veterinaria</option>
+                                    <option value="fundacion">Fundación</option>
+                                    <option value="ong">ONG</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                                <div id="institutionTypeError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="registrationNumber">Número de Registro *</label>
+                                <input type="text" id="registrationNumber" name="registrationNumber" class="form-input"
+                                    required>
+                                <div id="registrationNumberError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Person -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="contactFirstName">Nombre del Responsable *</label>
+                                <input type="text" id="contactFirstName" name="contactFirstName" class="form-input"
+                                    required>
+                                <div id="contactFirstNameError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="contactLastName">Apellidos del Responsable *</label>
+                                <input type="text" id="contactLastName" name="contactLastName" class="form-input"
+                                    required>
+                                <div id="contactLastNameError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="contactPosition">Cargo/Posición *</label>
+                                <input type="text" id="contactPosition" name="contactPosition" class="form-input"
+                                    required>
+                                <div id="contactPositionError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Teléfono *</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" required>
+                                <div id="phoneError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <h3
+                            style="margin: 30px 0 20px 0; color: #333; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">
+                            Dirección de la Institución</h3>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="street">Calle *</label>
+                                <input type="text" id="street" name="street" class="form-input" required>
+                                <div id="streetError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="exteriorNumber">Número Exterior *</label>
+                                <input type="text" id="exteriorNumber" name="exteriorNumber" class="form-input"
+                                    required>
+                                <div id="exteriorNumberError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="interiorNumber">Número Interior</label>
+                                <input type="text" id="interiorNumber" name="interiorNumber" class="form-input">
+                                <div id="interiorNumberError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="neighborhood">Colonia *</label>
+                                <input type="text" id="neighborhood" name="neighborhood" class="form-input" required>
+                                <div id="neighborhoodError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="city">Ciudad *</label>
+                                <input type="text" id="city" name="city" class="form-input" required>
+                                <div id="cityError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="state">Estado *</label>
+                                <input type="text" id="state" name="state" class="form-input" required>
+                                <div id="stateError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="postalCode">Código Postal *</label>
+                                <input type="text" id="postalCode" name="postalCode" class="form-input" required>
+                                <div id="postalCodeError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email Institucional *</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                                <div id="emailError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Institution Logo -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Logo de la Institución</label>
+                            <div class="photo-upload">
+                                <div class="photo-preview" id="photoPreview"
+                                    onclick="document.getElementById('photoInput').click()">
+                                    <div class="photo-placeholder">
+                                        <div style="font-size: 40px; margin-bottom: 10px;">📷</div>
+                                        <div>Subir Logo</div>
+                                    </div>
+                                </div>
+                                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                                <button type="button" class="photo-button"
+                                    onclick="document.getElementById('photoInput').click()">
+                                    Seleccionar Archivo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="description">Descripción de la Institución *</label>
+                            <textarea id="description" name="description" class="form-input" rows="4" required
+                                placeholder="Describe brevemente los servicios que ofrece tu institución..."></textarea>
+                            <div id="descriptionError" class="error-message"></div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="password">Contraseña *</label>
+                                <input type="password" id="password" name="password" class="form-input" required>
+                                <div id="passwordError" class="error-message"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="confirmPassword">Confirmar Contraseña *</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-input"
+                                    required>
+                                <div id="confirmPasswordError" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-button" id="submitButton">
+                            <span class="loading-spinner" id="loadingSpinner"></span>
+                            <span id="buttonText">Registrar Institución</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message">
+                <div class="success-icon">✓</div>
+                <h2 class="success-title">¡Registro Exitoso!</h2>
+                <p class="success-text">
+                    Gracias por registrar tu institución en ADO-PET.<br>
+                    Uno de nuestros administradores revisará tu solicitud y te contactaremos en un tiempo máximo de 3
+                    días, puedes iniciar sesion temporalmente para poder ver el estado de tu solicitud.
+                </p>
+
+                
+                <button onclick="window.location.href='login.html'" class="photo-button" style="padding: 15px 30px; font-size: 16px;">
+                    Iniciar Sesion
+                </button>
+            </div>
+
+            <!-- Status Page -->
+            <div id="statusPage" class="status-page">
+                <div class="status-icon">⏳</div>
+                <h2 class="status-title">Solicitud en Revisión</h2>
+
+                <div class="countdown-container">
+                    <h3 class="countdown-title">Tiempo restante para respuesta:</h3>
+                    <div class="countdown-timer" id="countdownTimer">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">3</span>
+                            <span class="countdown-label">Días</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">00</span>
+                            <span class="countdown-label">Horas</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">00</span>
+                            <span class="countdown-label">Minutos</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">00</span>
+                            <span class="countdown-label">Segundos</span>
+                        </div>
+                    </div>
+                    <div
+                        style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                        <p style="color: #856404; font-size: 14px; margin: 0;">
+                            ⚠️ <strong>Importante:</strong> Si no recibimos respuesta en 3 días, tu solicitud será
+                            eliminada automáticamente y deberás registrarte nuevamente.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="status-info">
+                    <h4>Estado Actual: Pendiente de Revisión</h4>
+                    <p>
+                        Tu solicitud ha sido recibida correctamente y está siendo revisada por nuestro equipo de
+                        administradores.
+                        Verificaremos la información proporcionada y la documentación de tu institución.
+                    </p>
+                    <div style="background: #e7f3ff; border-left: 4px solid #007bff; padding: 15px; margin: 15px 0;">
+                        <h5 style="margin: 0 0 10px 0; color: #0056b3;">Información de Contacto</h5>
+                        <p style="margin: 0; font-size: 14px;">
+                            Si tienes alguna pregunta sobre tu solicitud, puedes contactarnos en:<br>
+                            📧 instituciones@adopet.com<br>
+                            📞 +52 443 123 4567
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="goBackToRegistration()" class="photo-button"
+                    style="margin-top: 20px; padding: 10px 20px; background: #dc3545; border-color: #dc3545;">
+                    Cancelar Solicitud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/institusionRegistro.js"></script>
+</body>
+
+</html>

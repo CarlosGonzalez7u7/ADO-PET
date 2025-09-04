@@ -1,0 +1,226 @@
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #f4e4c1 0%, #e8d5b7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background illustration elements */
+        .background-scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><defs><style>.tree{fill:%23a8b568}.bench{fill:%238b4513}.dog{fill:%23d2691e}.ground{fill:%23c8b99c}</style></defs><circle cx="650" cy="80" r="40" fill="%23f4a460"/><ellipse cx="400" cy="580" rx="400" ry="20" class="ground"/><rect x="50" y="200" width="15" height="80" class="tree"/><circle cx="57" cy="190" r="25" class="tree"/><rect x="700" y="180" width="15" height="100" class="tree"/><circle cx="707" cy="170" r="30" class="tree"/><rect x="300" y="400" width="80" height="15" class="bench"/><rect x="290" y="390" width="100" height="8" class="bench"/><ellipse cx="500" cy="450" rx="25" ry="15" class="dog"/><ellipse cx="520" cy="445" rx="15" ry="10" class="dog"/><circle cx="525" cy="440" r="3" fill="%23000"/></svg>') no-repeat center center;
+            background-size: cover;
+            opacity: 0.7;
+        }
+
+        .container {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 90%;
+            min-height: 500px;
+            z-index: 10;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 40px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .adoption-message {
+            text-align: center;
+            max-width: 300px;
+            padding: 30px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .adoption-message h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .adoption-message p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .right-panel {
+            flex: 0 0 350px;
+            padding: 40px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo-content {
+            text-align: center;
+        }
+
+        .logo-text {
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background-image: url("../img/adopet.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 5px auto;
+            
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .register-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: #28a745;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #218838;
+        }
+
+        .login-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+            
+            .left-panel {
+                display: none;
+            }
+            
+            .right-panel {
+                flex: 1;
+            }
+        }

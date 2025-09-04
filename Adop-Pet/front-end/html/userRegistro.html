@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADO-PET - Registro de Usuario</title>
+    <link rel="stylesheet" href="../css/userRegistro.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background-scene">
+        <div class="tree tree-1"></div>
+        <div class="tree tree-2"></div>
+        <div class="cloud cloud-1"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-text">ADX-PET</div>
+            </div>
+            <h1 class="title">ADO-PET Registro</h1>
+            <p class="subtitle">USUARIO</p>
+        </div>
+
+        <form class="form" id="registrationForm">
+            <!-- Photo Upload -->
+            <div class="form-group full-width">
+                <label class="label">Foto de Perfil</label>
+                <div class="photo-upload">
+                    <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photo').click()">
+                        <div class="photo-placeholder" id="photoPlaceholder">
+                            <div>📷</div>
+                            <div>Subir foto</div>
+                        </div>
+                    </div>
+                    <input type="file" class="photo-input" id="photo" name="photo" accept="image/*">
+                </div>
+            </div>
+
+            <!-- Name Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="label" for="firstName">Nombre Completo *</label>
+                    <input type="text" class="input" id="firstName" name="name" required>
+                    <div class="error-message" id="firstNameError">El nombre es requerido</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="label" for="paternalSurname">Apellido Paterno *</label>
+                    <input type="text" class="input" id="paternalSurname" name="lastName" required>
+                    <div class="error-message" id="paternalSurnameError">El apellido paterno es requerido</div>
+                </div>
+                <div class="form-group">
+                    <label class="label" for="maternalSurname">Apellido Materno</label>
+                    <input type="text" class="input" id="maternalSurname" name="motherLastName">
+                </div>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="form-group full-width">
+                <label class="label" for="birthDate">Fecha de Nacimiento *</label>
+                <div class="date-input">
+                    <input type="date" class="input" id="birthDate" name="birthdate" required>
+                </div>
+                <div class="error-message" id="birthDateError">La fecha de nacimiento es requerida</div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="form-group full-width">
+                <label class="label" for="phone">Teléfono *</label>
+                <input type="tel" class="input" id="phone" name="phone" placeholder="Ej: +52 55 1234 5678" required>
+                <div class="error-message" id="phoneError">El teléfono es requerido</div>
+            </div>
+
+            <div class="form-group full-width">
+                <label class="label" for="email">Email *</label>
+                <input type="email" class="input" id="email" name="email" placeholder="tu@email.com" required>
+                <div class="error-message" id="emailError">El email es requerido y debe ser válido</div>
+            </div>
+
+            <!-- Password Fields -->
+            <div class="form-group full-width">
+                <label class="label" for="password">Contraseña *</label>
+                <input type="password" class="input" id="password" name="password" required>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                </div>
+                <div class="error-message" id="passwordError">La contraseña debe tener al menos 8 caracteres</div>
+            </div>
+
+            <div class="form-group full-width">
+                <label class="label" for="confirmPassword">Verificar Contraseña *</label>
+                <input type="password" class="input" id="confirmPassword" name="confirmPassword" required>
+                <div class="error-message" id="confirmPasswordError">Las contraseñas no coinciden</div>
+            </div>
+
+            <button type="submit" class="submit-button" id="submitButton">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="buttonText">Registrar</span>
+            </button>
+
+            <div class="success-message" id="successMessage">
+                ¡Registro exitoso! Bienvenido a ADO-PET 🐾
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/userRegistro.js"></script>
+</body>
+
+</html>

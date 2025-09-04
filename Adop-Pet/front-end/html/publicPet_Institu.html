@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADOPET - Registrar Mascota</title>
+    <link rel="stylesheet" href="/front-end/css/publicPet_Institu.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Redesigned header with ADOPET branding and navigation -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-circle">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h1>ADOPET/Institución</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="/front-end/html/institucionDashboard.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Solicitudes</span>
+                </a>
+                <a href="#" class="nav-item current">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Publicar</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Información</span>
+                </a>
+            </nav>
+            <div class="user-profile">
+                <div class="profile-circle">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="#" onclick="logout()" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Added hero section with motivational message -->
+        <div class="hero-section">
+            <h2>Registra una nueva mascota para adopción</h2>
+            <p>Ayuda a encontrar un hogar lleno de amor para nuestros amigos peludos</p>
+        </div>
+
+        <div class="form-wrapper">
+            <form id="addPetForm">
+                <!-- Enhanced form sections with better visual hierarchy -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <h3>Información Básica</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="petName">Nombre *</label>
+                            <input type="text" id="petName" name="petName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="species">Especie *</label>
+                            <select id="species" name="species" required>
+                                <option value="">Seleccionar especie</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Conejo">Conejo</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="breed">Raza *</label>
+                            <input type="text" id="breed" name="breed" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Edad *</label>
+                            <input type="text" id="age" name="age" placeholder="Ej: 2 años" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Género *</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Seleccionar género</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Hembra">Hembra</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-ruler-combined"></i>
+                        </div>
+                        <h3>Detalles Físicos</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="size">Tamaño *</label>
+                            <select id="size" name="size" required>
+                                <option value="">Seleccionar tamaño</option>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Peso (kg) *</label>
+                            <input type="number" step="0.1" id="weight" name="weight" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="esteril">Esterilizado *</label>
+                            <select id="esteril" name="esteril" required>
+                                <option value="">Seleccionar estado</option>
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3>Historia y Fotos</h3>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="description">Historia de la mascota *</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Cuéntanos la historia de esta mascota, su personalidad, cuidados especiales..." required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="photos">Fotos de la Mascota (máx. 5)</label>
+                        <div class="file-upload-area">
+                            <input type="file" id="photos" name="photos[]" multiple accept="image/*">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Arrastra las fotos aquí o haz clic para seleccionar</p>
+                            </div>
+                        </div>
+                        <div id="photoPreview" class="photo-preview"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-syringe"></i>
+                        </div>
+                        <h3>Cartilla de Vacunación</h3>
+                    </div>
+                    <div id="vaccineContainer" class="vaccine-container">
+                    </div>
+                    <button type="button" id="addVaccineBtn" class="add-vaccine-btn">
+                        <i class="fas fa-plus"></i>
+                        Añadir Vacuna
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn" class="submit-btn">
+                        <i class="fas fa-heart"></i>
+                        Registrar Mascota
+                    </button>
+                </div>
+                
+                <div id="formMessage" class="form-message"></div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/front-end/js/publicPet_Institu.js"></script>
+</body>
+
+</html>

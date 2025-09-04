@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADO-PET Dashboard</title>
+    <link rel="stylesheet" href="/front-end/css/index.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-circle">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <span>ADO-PET</span>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active">
+                    <i class="fas fa-heart"></i>
+                    Adopta
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-building"></i>
+                    Centros de adopción
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-stethoscope"></i>
+                    Veterinarias
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-calendar"></i>
+                    Eventos
+                </button>
+            </nav>
+
+            <div class="user-profile">
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Adopta, dale una segunda vida a un peludo</h1>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Filtrar Por:</label>
+                    <select id="filterType">
+                        <option value="all">Todos</option>
+                        <option value="dog">Perros</option>
+                        <option value="cat">Gatos</option>
+                        <option value="rabbit">Conejos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Adoptar Hoy Cerca:</label>
+                    <select id="filterLocation">
+                        <option value="all">Todas las ubicaciones</option>
+                        <option value="centro">Centro de Morelia</option>
+                        <option value="norte">Norte de Morelia</option>
+                        <option value="sur">Sur de Morelia</option>
+                    </select>
+                </div>
+
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Pets Grid -->
+        <section class="pets-grid" id="petsGrid">
+            <!-- Pet cards will be dynamically generated -->
+        </section>
+
+        <!-- News Section -->
+        <section class="news-section">
+            <div class="news-header">
+                <i class="fas fa-paw"></i>
+                <h2>NOTICIAS</h2>
+                <i class="fas fa-paw"></i>
+                <p>¡Entérate de todo!</p>
+            </div>
+
+            <div class="news-grid">
+                <article class="news-card">
+                    <img src="/front-end/img/mascotas/Luna.jpg" alt="Perro adoptado">
+                    <div class="news-content">
+                        <h3>¡Luna ha sido adoptada!</h3>
+                        <p>Después de 6 meses en el refugio, Luna finalmente encontró su hogar para siempre. Sus nuevos
+                            padres están emocionados de darle todo el amor que se merece.</p>
+                        <a href="#" class="news-link">¡Conoce a Luna y su nueva familia!</a>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOwcOvSPQGVg6JCk1tK83VS6cYdFi9rqKHYQ&s"
+                        alt="Perro preparándose">
+                    <div class="news-content">
+                        <h3>Toribio se prepara para ser adoptado</h3>
+                        <p>Después de una recuperación exitosa, Toribio ya está listo para encontrar una familia llena
+                            de amor. Este cachorro es muy juguetón y cariñoso.</p>
+                        <a href="#" class="news-link">Conoce más sobre Toribio</a>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqC5QkZsbJae4b8x2_jYsySqn_YQpVg2QQgg&s"
+                        alt="Campaña esterilización">
+                    <div class="news-content">
+                        <h3>Campaña de esterilización</h3>
+                        <p>Este mes tenemos una campaña especial de esterilización gratuita. Ayúdanos a controlar la
+                            población de mascotas sin hogar.</p>
+                        <a href="#" class="news-link">Más información sobre la campaña</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pet Detail Modal -->
+    <div class="modal-overlay" id="petModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="modal-body" id="modalBody">
+                <!-- Pet details will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Cargando mascotas...</p>
+    </div>
+
+    <script src="/front-end/js/index.js"></script>
+</body>
+
+</html>

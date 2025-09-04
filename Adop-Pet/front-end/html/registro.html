@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecciona tu Perfil - ADX-PET</title>
+    <link rel="stylesheet" href="../css/registro.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="background-scene">
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="building"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+    </div>
+
+    <!-- Main container -->
+    <div class="container">
+        <!-- Welcome section -->
+        <div class="welcome-section">
+            <div class="logo">
+                <div>
+                    <div class="dog-silhouette"></div>
+                </div>
+            </div>
+            <h1 class="welcome-title">¡BIENVENIDO A ADOPET!</h1>
+            <p class="welcome-subtitle">
+                Conectamos corazones con patitas. Encuentra tu compañero perfecto o ayuda a encontrarles un hogar.
+            </p>
+        </div>
+
+        <!-- Profile selection section -->
+        <div class="profile-section">
+    <h2 class="profile-title">SELECCIONA TU PERFIL</h2>
+    
+    <div class="profile-options">
+        
+        <a href="userRegistro.html" style="min-width: 150px; text-decoration: none; color: inherit;">
+            <div class="profile-card user-card" data-profile="user">
+                <div class="profile-icon"></div>
+                <div class="profile-label">USUARIO</div>
+                <div class="profile-description">
+                    Busco adoptar una mascota y darle un hogar lleno de amor
+                </div>
+            </div>
+        </a>
+
+        <a href="institusionRegistro.html" style="min-width: 150px; text-decoration: none; color: inherit;">
+            <div class="profile-card institution-card" data-profile="institution">
+                <div class="profile-icon2"></div>
+                <div class="profile-label">INSTITUCIÓN</div>
+                <div class="profile-description">
+                    Refugio, veterinaria o fundación que ayuda a las mascotas
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="continue-section">
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+</div>
+        
+
+        <!-- Loading overlay -->
+        <div class="loading" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>Configurando tu perfil...</p>
+        </div>
+    </div>
+
+    <!-- <script src="../js/registro.js"></script> -->
+</body>
+</html>
