@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat con Ado-Pet</title>
+  <style>
+    /* --- ESTILOS GENERALES Y DEL CHAT --- */
+    :root {
+      --bggradient: #D5F3D2;
+      --belly: #654321;
+      --belly_dark: #3f2a14;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: var(--bggradient);
+      background-image: none;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--belly_dark);
+      margin-bottom: 15px;
+    }
+
+    #chat { 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      height: 400px; 
+      overflow-y: auto;
+      /* --- CAMBIO 1: COLOR DE FONDO DEL CHAT --- */
+      background-color: #D9D9D9; 
+      border-radius: 8px;
+    }
+    
+    .msg { margin: 5px 0; padding: 6px 10px; border-radius: 8px; white-space: pre-wrap; max-width: 80%; }
+    .user { background: #e3f2fd; text-align: right; margin-left: auto; }
+    .bot { background: #f1f8e9; text-align: left; margin-right: auto; }
+    
+    #inputArea { margin-top: 10px; display: flex; gap: 10px; }
+    #userInput { 
+      flex: 1; 
+      padding: 8px; 
+      border-radius: 8px; 
+      border: 1px solid #ccc;
+      /* --- CAMBIO 2: COLOR DE FONDO DEL INPUT --- */
+      background-color: #D9D9D9;
+    }
+    button { padding: 8px 12px; border-radius: 8px; border: none; background-color: #4CAF50; color: white; cursor: pointer; }
+
+    /* --- ESTILOS PARA LA ANIMACIÓN DEL PERRITO (sin cambios) --- */
+    #animation-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      margin-top: 20px;
+    }
+    
+    .dog-container {
+      position: absolute;
+      left: 50%;
+      top: 35%;
+      transform: translate(-50%, -50%) scale(0.8);
+      height: 250px;
+      width: 250px;
+      animation: bounce 0.25s infinite alternate;
+    }
+
+    #dog_belly {
+      position: absolute;
+      height: 200px;
+      width: 55px;
+      left: 100px;
+      background-color: var(--belly);
+      transform: rotate(90deg);
+      border-radius: 2rem;
+      animation: bellymove 0.25s infinite alternate;
+      z-index: 2;
+    }
+
+    #dog_head {
+      position: absolute;
+      height: 100px;
+      width: 55px;
+      left: 172.5px;
+      top: 25px;
+      border-radius: 2rem;
+      background-color: var(--belly);
+      animation: headbob 0.5s infinite alternate ease-in-out;
+      transform-origin: bottom;
+    }
+
+    #dog_ear_right {
+      position: absolute;
+      height: 40px;
+      width: 30px;
+      left: -10px;
+      background-color: var(--belly_dark);
+      border-radius: 1rem;
+      animation: earflop 0.25s infinite alternate;
+    }
+
+    #dog_eye {
+      position: absolute;
+      height: 15px;
+      width: 15px;
+      left: 30px;
+      top: 10px;
+      background-color: white;
+      border-radius: 50%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    
+    #dog_eye_pupil {
+      height: 12px;
+      width: 12px;
+      background-color: var(--belly_dark);
+      border-radius: 50%;
+      transform: translateX(3px);
+    }
+
+    #dog_nose {
+      position: absolute;
+      width: 60px;
+      height: 25px;
+      top: 20px;
+      left: 15px;
+      background-color: var(--belly);
+      border-radius: 0 0 1rem 0;
+    }
+
+    #dog_nose_spot {
+      position: absolute;
+      left: 67.5px;
+      top: 15px;
+      width: 12.5px;
+      height: 12.5px;
+      background-color: var(--belly_dark);
+      border-radius: 50%;
+    }
+
+    #dog_leg_frontright, #dog_leg_frontleft, #dog_leg_backleft, #dog_leg_backright {
+      position: absolute;
+      height: 40px;
+      width: 15px;
+      border-radius: 2rem;
+      animation: legmove 0.5s infinite alternate ease-in-out;
+    }
+    #dog_leg_frontright { background-color: var(--belly); top: 117.5px; left: 190px; z-index: 1; }
+    #dog_leg_frontleft { background-color: var(--belly); top: 117.5px; left: 50px; animation-delay: 0.5s; z-index: 1;}
+    #dog_leg_backleft { background-color: var(--belly_dark); top: 117.5px; left: 50px; z-index: 0; }
+    #dog_leg_backright { background-color: var(--belly_dark); top: 117.5px; left: 190px; animation-delay: 0.5s; z-index: 0; }
+
+    #tail {
+      position: absolute;
+      top: 80px;
+      left: 5px;
+      height: 15px;
+      background-color: var(--belly);
+      border-radius: 2rem;
+      animation: tailwag 0.25s infinite alternate ease-in-out;
+      transform-origin: right;
+    }
+    
+    #shadow {
+      margin: auto;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 65px; 
+      width: 200px;
+      height: 15px;
+      background-color: var(--belly);
+      opacity: 0.15;
+      border-radius: 2rem;
+      animation: shadowmove 0.25s infinite alternate;
+    }
+
+    @keyframes bellymove { from {width: 50px;} to {width: 53.5px;} }
+    @keyframes headbob { 0% {transform: rotate(2deg);} 100%{transform: rotate(-2deg);} }
+    @keyframes legmove { 0%{transform: rotate(12deg) translateX(-5px);} 50%{transform: translateY(-4px);} 100%{transform: rotate(-12deg) translateX(5px);} }
+    @keyframes shadowmove { from {width: 200px;} to {width: 195px;} }
+    @keyframes tailwag { from {width: 40px; transform: rotate(25deg);} to {width: 38px; transform: rotate(12.5deg);} }
+    @keyframes earflop { from {transform: rotate(60deg);} to {transform: rotate(45deg);} }
+    @keyframes bounce { 0%{transform: translateY(0px);} 100%{transform: translateY(4px);} }
+  </style>
+</head>
+<body>
+  <h1>Chat con Huesitos de Ado-Pet 🦴</h1>
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input type="text" id="userInput" placeholder="Habla con Huesitos, colega..." />
+    <button id="sendButton">Enviar</button>
+  </div>
+
+  <div id="animation-container">
+    <div class="dog-container">
+      <div id="dog_belly"></div>
+      <div id="dog_head">
+        <div id="dog_eye">
+          <div id="dog_eye_pupil"></div>
+        </div>
+        <div id="dog_nose"></div>
+        <div id="dog_nose_spot"></div>
+        <div id="dog_ear_right"></div>
+      </div>
+      <div id="dog_leg_frontright"></div>
+      <div id="dog_leg_backright"></div>
+      <div id="dog_leg_backleft"></div>
+      <div id="dog_leg_frontleft"></div>
+      <div id="tail"></div>
+    </div>
+    <div id="shadow"></div>
+  </div>
+
+  <script type="module">
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    const API_KEY = "AIzaSyCwsUE31aVpmQWKKmmNvc40qj43BFOVeM8"; 
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const systemPrompt = `
+      Actuarás como "Huesitos", el asistente virtual de "Ado-Pet". Eres la voz amigable y experta de la organización.
+      **REGLAS FUNDAMENTALES OBLIGATORIAS:**
+      1.  **NOMBRE DE LA EMPRESA:** Siempre te refieres a la organización como "Ado-Pet".
+      2.  **TRATO AL USUARIO:** Siempre, sin excepción, dirígete al usuario como "colega".
+      3.  **RESTRICCIÓN ESTRICTA DE TEMA:** Tu único propósito es ayudar con la plataforma Ado-Pet. SOLO puedes responder preguntas sobre: adopción, reporte de perritos, comunidad de adoptantes, inicio de sesión/registro, donaciones y voluntariado.
+      4.  **PROTOCOLO DE RECHAZO:** Si un colega pregunta sobre cualquier otro tema, declina amablemente y reorienta la conversación. Di algo como: "¡Buena pregunta, colega! Sin embargo, mi especialidad es todo sobre los perritos de Ado-Pet. ¿Puedo ayudarte a adoptar, reportar o con alguna otra función de nuestra página?".
+      5.  **LÍMITES:** Nunca ofrezcas consejos médicos. Dirige siempre a un veterinario profesional.
+      6.  **IDIOMA:** Responde siempre en español.
+      **ESTILO DE COMUNICACIÓN (MUY IMPORTANTE):**
+      -   **SÉ NATURAL Y DIRECTO:** Responde de forma clara y ve al grano. Evita las introducciones largas, las formalidades excesivas y las despedidas repetitivas.
+      -   **EVITA SER UN ROBOT:** No uses frases como "Como modelo de lenguaje..." o "Estoy aquí para ayudarte...". Tu tono es cálido y cercano, como el de un voluntario apasionado por los animales, no el de una IA genérica.
+      -   **VARÍA TUS RESPUESTAS:** No empieces ni termines todas tus frases de la misma manera. Haz que la conversación se sienta orgánica y fluida.
+    `;
+
+    const chat = model.startChat({
+      history: [
+        { role: "user", parts: [{ text: systemPrompt }] },
+        { role: "model", parts: [{ text: "¡Guau! Qué bueno verte por aquí, colega. Soy Huesitos, de Ado-Pet. Dime, ¿cómo podemos ayudar a un perrito hoy?" }] }
+      ],
+      generationConfig: { maxOutputTokens: 1000 },
+    });
+
+    const chatDiv = document.getElementById("chat");
+    const userInput = document.getElementById("userInput");
+    const sendButton = document.getElementById("sendButton");
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const initialBotMessage = chat.history.find(msg => msg.role === 'model').parts[0].text;
+      if (initialBotMessage) {
+        addMessage('bot', initialBotMessage, false); 
+      }
+    });
+    
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      addMessage("user", text);
+      userInput.value = "";
+      userInput.focus();
+
+      try {
+        const result = await chat.sendMessage(text);
+        const reply = result.response.text();
+        addMessage("bot", reply);
+      } catch (err) {
+        console.error("Error en la llamada a la API:", err);
+        addMessage("bot", "⚠️ ¡Uy, colega! Parece que hay un problema. Asegúrate de que la API Key sea correcta.");
+      }
+    }
+    
+    function narrarTexto(texto) {
+      window.speechSynthesis.cancel();
+      const enunciado = new SpeechSynthesisUtterance(texto);
+      enunciado.lang = 'es-MX';
+      enunciado.rate = 1.1; 
+      window.speechSynthesis.speak(enunciado);
+    }
+
+    function addMessage(sender, text, narrar = true) {
+      const div = document.createElement("div");
+      div.className = "msg " + sender;
+      div.textContent = text;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+
+      if (sender === 'bot' && narrar) {
+        const textoNarrado = `Huesitos dice: ${text}`;
+        narrarTexto(textoNarrado);
+      }
+    }
+    
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
