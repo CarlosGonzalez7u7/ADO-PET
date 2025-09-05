@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Reporte de perritos callejeros</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <style>
+    :root{--accent:#9400D3;--muted:#666}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;display:flex;flex-direction:column;height:100vh}
+    header{padding:10px 14px;background:#fafafa;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
+    header h1{font-size:16px;margin:0}
+    main{display:flex;flex:1;min-height:0}
+    #map{flex:1;min-height:0; cursor: crosshair !important;}
+    aside{width:360px;border-left:1px solid #eee;background:#fff;overflow:auto}
+    .panel{padding:12px}
+    .panel h3 { display: flex; justify-content: space-between; align-items: center; }
+    .small{font-size:13px;color:var(--muted)}
+    form.reportForm{display:flex;flex-direction:column;gap:8px}
+    .row{display:flex;gap:8px}
+    .input, textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:14px}
+    textarea{min-height:76px;resize:vertical}
+    .btn{background:var(--accent);color:#fff;padding:10px;border-radius:8px;border:0;cursor:pointer}
+    .btn:disabled{opacity:.6}
+    .reportItem{display:flex;gap:8px;padding:8px;border-bottom:1px solid #f0f0f0; cursor: pointer;}
+    .reportItem:hover{background-color: #f9f9f9;}
+    .thumb{width:72px;height:72px;background:#f6f6f6;border-radius:8px;flex:0 0 72px;object-fit:cover}
+    .meta{flex:1}
+    .meta h4{margin:0;font-size:14px}
+    .meta p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    @media(max-width:900px){aside{width:320px} }
+    @media(max-width:640px){aside{display:none} header h1{font-size:14px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Reporta un perrito callejero • Localización + Foto</h1>
+    <div class="small">Haz clic en el mapa para seleccionar una ubicación o usa el botón para tu posición actual.</div>
+  </header>
+
+  <main>
+    <div id="map"></div>
+    <aside>
+      <div class="panel">
+        <h3>Nuevo reporte</h3>
+        <form id="reportForm" class="reportForm">
+          <label class="small">Descripción (opcional)</label>
+          <textarea id="desc" class="input" placeholder="Ejemplo: perro con collar, apariencia, comportamiento..."></textarea>
+          <label class="small">Foto (usará cámara si estás en teléfono)</label>
+          <input id="photo" type="file" accept="image/*" capture="environment" />
+          <div class="row">
+            <button id="submitBtn" type="submit" class="btn">Reportar ubicación actual</button>
+            <button id="clearBtn" type="button" class="btn" style="background:#ccc;color:#000">Limpiar</button>
+          </div>
+          <div id="formStatus" class="small" aria-live="polite"></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h3>Reportes recientes</h3>
+        <button id="clearAllReportsBtn" class="btn" style="background:#d9534f;color:#fff;width:100%;margin-bottom:12px;">Borrar todos los reportes</button>
+        <div id="reportsList"></div>
+      </div>
+       <div class="panel">
+        <h3>Control de visualización</h3>
+        <label class="small"><input id="toggleClusters" type="checkbox" checked> Mostrar zonas de concentración</label><br>
+        <label class="small"><input id="toggleMarkers" type="checkbox" checked> Mostrar marcadores individuales</label>
+        <p class="small" style="margin-top:8px">Las zonas de concentración agrupan reportes cercanos.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const STORAGE_KEY = 'reportes_perritos_v1';
+    const CLUSTER_RADIUS_METERS = 500; 
+    const MIN_REPORTS_FOR_CLUSTER = 3;
+
+    const map = L.map('map').setView([19.7028, -101.1923], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    let clusterLayerGroup = L.layerGroup().addTo(map); // Capa para los círculos
+    let markersLayerGroup = L.layerGroup().addTo(map); // Capa para los puntos
+    let userLocationMarker = null;
+    let tempReportMarker = null;
+    let selectedCoords = null;
+    
+    const tempIcon = L.icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+
+    function saveReports(reports) { localStorage.setItem(STORAGE_KEY, JSON.stringify(reports)); }
+    function loadReports() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (e) { return []; } }
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371000;
+        const toRad = x => x * Math.PI / 180;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+    
+    // --- LÓGICA DE CLUSTERING (Agrupamiento) ---
+    // Esta función encuentra los grupos de reportes conectados entre sí.
+    function findReportClusters(reports) {
+        const clusters = [];
+        const processedIds = new Set();
+        for (const report of reports) {
+            if (processedIds.has(report.id)) continue;
+            const currentCluster = [];
+            const queue = [report];
+            processedIds.add(report.id);
+            while (queue.length > 0) {
+                const current = queue.shift();
+                currentCluster.push(current);
+                for (const neighbor of reports) {
+                    if (!processedIds.has(neighbor.id) && haversineDistance(current.lat, current.lon, neighbor.lat, neighbor.lon) <= CLUSTER_RADIUS_METERS) {
+                        processedIds.add(neighbor.id);
+                        queue.push(neighbor);
+                    }
+                }
+            }
+            if (currentCluster.length >= MIN_REPORTS_FOR_CLUSTER) {
+                clusters.push(currentCluster);
+            }
+        }
+        return clusters;
+    }
+
+    // --- NUEVA FUNCIÓN DE RENDERIZADO PARA LOS CÍRCULOS ---
+    function renderClusterCircles() {
+        const reports = loadReports();
+        const clusters = findReportClusters(reports);
+        clusterLayerGroup.clearLayers(); // Limpia los círculos anteriores
+
+        if (document.getElementById('toggleClusters').checked) {
+            for (const cluster of clusters) {
+                const intensity = cluster.length;
+                let sumLat = 0, sumLon = 0;
+                for (const r of cluster) { 
+                    sumLat += r.lat; 
+                    sumLon += r.lon; 
+                }
+                const center = [sumLat / intensity, sumLon / intensity];
+
+                // Fórmula para que el radio del círculo crezca con el número de reportes.
+                // Empieza con un radio base de 80m y añade 20m por cada reporte.
+                const radiusInMeters = 80 + (intensity * 20);
+
+                // Se crea un círculo de Leaflet
+                const circle = L.circle(center, {
+                    radius: radiusInMeters,
+                    color: '#9400D3', // Color del borde
+                    weight: 1.5,
+                    fillColor: '#9400D3', // Color del relleno
+                    fillOpacity: 0.25 // Opacidad para que se vea como "zona"
+                });
+
+                circle.addTo(clusterLayerGroup);
+            }
+        }
+    }
+
+    function renderMarkers() {
+        const reports = loadReports();
+        // El estado de los círculos ahora determina la opacidad de los marcadores
+        const areClustersVisible = document.getElementById('toggleClusters').checked;
+        const markerOpacity = areClustersVisible ? 0.5 : 0.9;
+
+        markersLayerGroup.clearLayers();
+        if (document.getElementById('toggleMarkers').checked) {
+            for (const r of reports) {
+                const m = L.circleMarker([r.lat, r.lon], { 
+                    radius: 6, color: '#9400D3', weight: 1, fillOpacity: markerOpacity
+                }).addTo(markersLayerGroup);
+                m.on('click', () => {
+                    const el = document.getElementById('report-' + r.id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el && (el.style.background = '#f5e6ff') && setTimeout(() => el.style.background = '', 800);
+                });
+            }
+        }
+    }
+
+    function renderList() {
+        const reports = loadReports();
+        const list = document.getElementById('reportsList'); list.innerHTML = '';
+        reports.sort((a, b) => b.t - a.t);
+        for (const r of reports) {
+            const div = document.createElement('div'); div.className = 'reportItem'; div.id = 'report-' + r.id;
+            const img = document.createElement('img'); img.className = 'thumb'; img.src = r.photo || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+            const meta = document.createElement('div'); meta.className = 'meta';
+            const h4 = document.createElement('h4'); h4.textContent = r.desc || 'Reporte sin descripción';
+            const p = document.createElement('p');
+            p.textContent = new Date(r.t).toLocaleString();
+            meta.appendChild(h4); meta.appendChild(p);
+            div.appendChild(img); div.appendChild(meta);
+            div.addEventListener('click', () => { map.setView([r.lat, r.lon], 16); });
+            list.appendChild(div);
+        }
+    }
+    
+    function renderAll() {
+        renderClusterCircles();
+        renderMarkers();
+        renderList();
+    }
+
+    const form = document.getElementById('reportForm');
+    const photoInput = document.getElementById('photo');
+    const descInput = document.getElementById('desc');
+    const statusEl = document.getElementById('formStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    map.on('click', (e) => {
+        selectedCoords = e.latlng;
+        if (tempReportMarker) {
+            tempReportMarker.setLatLng(selectedCoords);
+        } else {
+            tempReportMarker = L.marker(selectedCoords, { icon: tempIcon, draggable: true }).addTo(map);
+            tempReportMarker.on('dragend', (event) => { selectedCoords = event.target.getLatLng(); });
+        }
+        submitBtn.textContent = 'Confirmar reporte en este punto';
+        statusEl.textContent = 'Ubicación manual seleccionada. Arrastra el pin si necesitas ajustarla.';
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const file = photoInput.files[0] || null;
+        const desc = descInput.value.trim();
+        if (selectedCoords) {
+            statusEl.textContent = 'Guardando reporte manual...';
+            await handleSubmitReport(selectedCoords.lat, selectedCoords.lng, file, desc);
+            resetManualReport();
+        } else {
+            statusEl.textContent = 'Obteniendo ubicación GPS...';
+            try {
+                const pos = await getCurrentPositionPromise({ enableHighAccuracy: true, timeout: 15000 });
+                await handleSubmitReport(pos.coords.latitude, pos.coords.longitude, file, desc);
+            } catch (err) {
+                statusEl.textContent = 'No se pudo obtener la ubicación. Asegúrate de permitir el permiso.';
+            }
+        }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        descInput.value = ''; photoInput.value = ''; statusEl.textContent = '';
+        resetManualReport();
+    });
+
+    function resetManualReport() {
+        if (tempReportMarker) {
+            map.removeLayer(tempReportMarker);
+            tempReportMarker = null;
+        }
+        selectedCoords = null;
+        submitBtn.textContent = 'Reportar ubicación actual';
+        statusEl.textContent = '';
+    }
+
+    async function handleSubmitReport(lat, lon, file, desc) {
+        let photoData = '';
+        if (file) { photoData = await readFileAsDataURL(file); }
+        const reports = loadReports();
+        const id = Date.now() + '-' + Math.floor(Math.random() * 9999);
+        reports.push({ id, lat, lon, desc, photo: photoData, t: Date.now() });
+        saveReports(reports);
+        renderAll();
+        statusEl.textContent = 'Reporte guardado. ¡Gracias!';
+        descInput.value = ''; photoInput.value = '';
+    }
+
+    function readFileAsDataURL(file) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(file); }); }
+    function getCurrentPositionPromise(options) { return new Promise((resolve, reject) => { if (!('geolocation' in navigator)) return reject(new Error('Geolocation no soportado')); navigator.geolocation.getCurrentPosition(resolve, reject, options); }); }
+
+    // Se actualizan los listeners
+    document.getElementById('toggleClusters').addEventListener('change', renderAll);
+    document.getElementById('toggleMarkers').addEventListener('change', renderAll);
+    
+    document.getElementById('clearAllReportsBtn').addEventListener('click', () => {
+        if (confirm('¿Estás seguro de que quieres borrar TODOS los reportes? Esta acción no se puede deshacer.')) {
+            saveReports([]);
+            renderAll();
+        }
+    });
+
+    async function initializeApp() {
+        try {
+            const pos = await getCurrentPositionPromise({ enableHighAccuracy: true, timeout: 10000 });
+            const userLat = pos.coords.latitude;
+            const userLon = pos.coords.longitude;
+            map.setView([userLat, userLon], 16);
+            if (userLocationMarker) { map.removeLayer(userLocationMarker); }
+            userLocationMarker = L.circleMarker([userLat, userLon], {
+                radius: 8, color: '#1e90ff', weight: 2, fillColor: '#fff', fillOpacity: 1
+            }).addTo(map);
+            userLocationMarker.bindPopup("<b>Tu ubicación actual</b>").openPopup();
+        } catch (error) {
+            console.warn("No se pudo obtener la ubicación del GPS, usando fallback.", error);
+            const existing = loadReports();
+            if (existing.length > 0) {
+                const r = existing.sort((a,b) => b.t - a.t)[0];
+                map.setView([r.lat, r.lon], 13);
+            }
+        } finally {
+            renderAll();
+        }
+    }
+
+    initializeApp();
+  </script>
+</body>
+</html>
